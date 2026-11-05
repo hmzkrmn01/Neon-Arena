@@ -1,0 +1,98 @@
+name: Build Android APK & AAB
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Build web bundle
+        run: npm run build
+
+      - name: Regenerate Android icons and splash
+        run: |
+          mkdir -p assets
+          cp public/icon-512.png assets/icon-only.png
+          cp public/icon-512.png assets/icon-foreground.png
+          cp public/icon-512.png assets/icon-background.png
+          npm install --no-save sharp
+          node -e "
+          const sharp=require('sharp');
+          const fs=require('fs');
+          (async()=>{
+            const logo=await sharp(fs.readFileSync('public/icon-512.png')).resize(500,500,{fit:'contain'}).toBuffer();
+            await sharp({create:{width:2732,height:2732,channels:4,background:{r:5,g:6,b:15,alpha:1}}})
+              .composite([{input:logo,gravity:'center'}]).png().toFile('assets/splash.png');
+            await sharp({create:{width:2732,height:2732,channels:4,background:{r:5,g:6,b:15,alpha:1}}}).png().toFile('assets/splash-dark.png');
+          })();"
+          npx capacitor-assets generate --android
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Restore Gradle wrapper
+        run: |
+          mkdir -p android/gradle/wrapper
+          curl -sL -o android/gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.11.1/gradle/wrapper/gradle-wrapper.jar
+          chmod +x android/gradlew
+
+      - name: Restore upload keystore
+        run: base64 -d keystore.base64 > upload-key.p12
+
+      - name: Build signed APK and AAB
+        run: |
+          cd android
+          ./gradlew assembleRelease bundleRelease --no-daemon --max-workers=2
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NEON-ARENA-TELEFONA-KUR-APK
+          path: android/app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NEON-ARENA-GOOGLE-PLAY-AAB
+          path: android/app/build/outputs/bundle/release/app-release.aab
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0
+          name: Neon Arena v1.0
+          files: |
+            android/app/build/outputs/apk/release/app-release.apk
+            android/app/build/outputs/bundle/release/app-release.aab
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
