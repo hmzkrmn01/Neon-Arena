@@ -1,0 +1,32 @@
+╔══════════════════════════════════════════════════════════════╗
+║              NEON ARENA — APK/AAB NASIL ALINIR?              ║
+╚══════════════════════════════════════════════════════════════╝
+
+BU ORTAMDA .apk/.aab DOSYALARI KAYBOLUYOR (otomatik siliniyor)
+Bu yüzden kalıcı çözüm: GitHub'ın sunucusu derliyor, sen indiriyorsun.
+
+ADIM ADIM:
+1. Bu projenin TÜM dosyalarını GitHub'a yükle (push):
+   https://github.com/hmzkrmn01/Neon-Arena
+   (keystore.base64 dosyası DAHİL — bütün dosyalar)
+
+2. GitHub'da depoyu aç, üstteki "Actions" sekmesine gir.
+
+3. Solda iki iş göreceksin:
+   • "Deploy Neon Arena to GitHub Pages"  → Web siteni düzeltir
+   • "Build Android APK & AAB"            → APK/AAB üretir
+
+4. "Build Android APK & AAB" işi bitinceye kadar bekle (~5 dk, sarı top döner),
+   sonra yeşil tik göreceksin.
+
+5. İşe tıkla → sayfanın EN ALTINA in → "Artifacts" bölümü:
+   • NEON-ARENA-TELEFONA-KUR-APK.zip  → APK telefonuna kur
+   • NEON-ARENA-GOOGLE-PLAY-AAB.zip   → AAB Play Console'a yükle
+
+6. Ayrıca "Releases" bölümünde "Neon Arena v1.0" altında
+   doğrudan .apk ve .aab dosyaları indirilebilir olur.
+
+ANAHTARIN:
+- keystore.base64 dosyası imza anahtarının metin halidir.
+- Şifre: BlackGlm-Neon-2026!  (Alias: neon-arena-upload)
+- Depo herkese açıksa ileride gizli tutmak için GitHub Secrets kullan.
