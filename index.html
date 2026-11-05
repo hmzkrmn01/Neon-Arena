@@ -13,14 +13,14 @@
     <meta name="description" content="Neon sürülere karşı hayatta kal. Dalga tabanlı 2D twin-stick aksiyon arena oyunu." />
     <meta name="application-name" content="Neon Arena" />
     <meta name="apple-mobile-web-app-title" content="Neon Arena" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
-    <link rel="apple-touch-icon" href="/icon-512.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png" />
+    <link rel="apple-touch-icon" href="./icon-512.png" />
     <title>NEON ARENA — 2D Aksiyon</title>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
-          navigator.serviceWorker.register("/sw.js").then(function (registration) {
+          navigator.serviceWorker.register("./sw.js").then(function (registration) {
             registration.update().catch(function () {});
           }).catch(function () {});
 

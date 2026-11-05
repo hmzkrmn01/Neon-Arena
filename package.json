@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^7.6.10",
+    "@capacitor/cli": "^7.6.10",
+    "@capacitor/core": "^7.6.10",
     "clsx": "2.1.1",
     "lucide-react": "^1.68.0",
     "react": "19.2.6",
@@ -16,6 +19,7 @@
     "tailwind-merge": "3.4.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
     "@tailwindcss/vite": "4.1.17",
     "@types/node": "22.19.17",
     "@types/react": "19.2.7",
